@@ -13,10 +13,8 @@ if (isset($_GET['phpinfo'])) {
         <meta name="description" content="localhost">
         <meta name="author" content="Petr Malecha, www.bedi.cz">
         <title>localhost</title>
-
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
-
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
             <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -25,9 +23,7 @@ if (isset($_GET['phpinfo'])) {
 
     </head>
     <body>
-
         <div class="container theme-showcase" role="main">
-
             <div class="row">
                 <div class="col-sm-12">
                     <div class="page-header">
@@ -35,7 +31,6 @@ if (isset($_GET['phpinfo'])) {
                     </div>
                 </div>
             </div>
-
             <div class="row">
                 <div class="col-sm-12">
                     <div class="page-header">
@@ -43,15 +38,12 @@ if (isset($_GET['phpinfo'])) {
                     </div>
                 </div>
             </div>
-
             <div class="row">
                 <div class="col-sm-12">
                     <a href="?phpinfo" class="btn btn-primary btn-lg" role="button">PHP info »</a>
                     <a href="//localhost/phpmyadmin" class="btn btn-primary btn-lg btn-warning" role="button">phpMyAdmin »</a>
                 </div>
             </div>
-
-
             <div class="row">
                 <div class="col-sm-12">
                     <div class="page-header">
@@ -59,9 +51,7 @@ if (isset($_GET['phpinfo'])) {
                     </div>
                 </div>
             </div>
-
             <div class="row">
-
                 <?php
                 $projectsListIgnore = array ('.','..');
                 $handle = opendir('.');
@@ -101,19 +91,16 @@ if (isset($_GET['phpinfo'])) {
                 }
                 closedir($handle);
                 ?>
-
             </div>
-
-
-
-            <div class="page-header">
-                <h2>Server Configuration</h2>
-            </div>
-
             <div class="row">
-
+                <div class="col-sm-12">
+                    <div class="page-header">
+                        <h2>Server Configuration</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-sm-3">
-
                     <ul class="list-group">
                         <li class="list-group-item">
                             <h4 class="list-group-item-heading">Apache Version</h4>
@@ -142,11 +129,8 @@ if (isset($_GET['phpinfo'])) {
                             </p>
                         </li>
                     </ul>
-
                 </div>
-
                 <div class="col-sm-3">
-
                     <div class="panel panel-info">
                         <div class="panel-heading">
                             <h3 class="panel-title">PHP configuration</h3>
@@ -186,11 +170,8 @@ if (isset($_GET['phpinfo'])) {
                             </ul>
                         </div>
                     </div>
-
                 </div>
-
                 <div class="col-sm-3">
-
                     <div class="panel panel-info">
                         <div class="panel-heading">
                             <h3 class="panel-title">Loaded PHP Extensions</h3>
@@ -203,11 +184,8 @@ if (isset($_GET['phpinfo'])) {
                             ?>
                         </div>
                     </div>
-
                 </div>
-
                 <div class="col-sm-3">
-
                     <div class="panel panel-info">
                         <div class="panel-heading">
                             <h3 class="panel-title">Loaded Apache Modules</h3>
@@ -220,14 +198,8 @@ if (isset($_GET['phpinfo'])) {
                             ?>
                         </div>
                     </div>
-
                 </div>
-
             </div>
-
         </div>
-
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     </body>
 </html>
