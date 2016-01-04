@@ -121,7 +121,7 @@ if (isset($_GET['phpinfo'])) {
                             <h4 class="list-group-item-heading">MySQL Version</h4>
                             <p class="list-group-item-text">
                                 <?php
-                                $mysqlVersion = mysql_get_client_info();
+                                $mysqlVersion = mysqli_get_client_info();
                                 $array = explode(" ", $mysqlVersion);
                                 $array = explode("-", $array[1]);
                                 echo $array[0];
