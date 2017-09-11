@@ -3,6 +3,7 @@ if (isset($_GET['phpinfo'])) {
     phpinfo();
     exit();
 }
+$config = @include_once 'config.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -13,98 +14,78 @@ if (isset($_GET['phpinfo'])) {
         <meta name="description" content="localhost">
         <meta name="author" content="Petr Malecha, www.bedi.cz">
         <title>localhost</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
-        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-        <!--[if lt IE 9]>
-            <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-            <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->
-
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css" media="screen" rel="stylesheet" type="text/css">
     </head>
     <body>
-        <div class="container theme-showcase" role="main">
+        <div class="container">
             <div class="row">
-                <div class="col-sm-12">
-                    <div class="page-header">
-                        <h1>Localhost server</h1>
-                    </div>
+                <div class="col">
+                    <h1>Localhost</h1>
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-12">
-                    <div class="page-header">
-                        <h2>Tools</h2>
-                    </div>
+                <div class="col">
+                    <a href="?phpinfo" class="btn btn-primary">PHP info »</a>
+                    &nbsp;
+                    <?php if (@$config['phpmyadmin_url'])  { ?>
+                        <a href="<?php echo $config['phpmyadmin_url']; ?>" class="btn btn-warning">phpMyAdmin »</a>
+                    <?php } ?>
+                    <hr>
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-12">
-                    <a href="?phpinfo" class="btn btn-primary btn-lg" role="button">PHP info »</a>
-                    <a href="//localhost/phpmyadmin" class="btn btn-primary btn-lg btn-warning" role="button">phpMyAdmin »</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="page-header">
-                        <h2>My projects</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <?php
-                $projectsListIgnore = array ('.','..');
-                $handle = opendir('.');
-                $dirs = array();
-                $i = 0;
-                $in_column = 0;
-                while ($file = readdir($handle)) {
-                    if (is_dir($file) && !in_array($file, $projectsListIgnore)) {
-                        if (strpos($file, '.') !== 0) {
-                            $subdirs = scandir($file);
-                            $dirs[$i]['domain'] = $file;
-                            $dirs[$i]['root'] = $file;
-                            foreach ($subdirs as $subdir) {
-                                if ($subdir == "www_root" or $subdir == "public") {
-                                    $dirs[$i]['root'] = $file . "/" . $subdir;
-                                    break;
+                <div class="col-6">
+                    <h2>My projects</h2>
+                    <div class="list-group">
+                        <?php
+                        $projectsListIgnore = array ('.','..');
+                        $handle = opendir('.');
+                        $dirs = array();
+                        $i = 0;
+                        $in_column = 0;
+                        while ($file = readdir($handle)) {
+                            if (is_dir($file) && !in_array($file, $projectsListIgnore)) {
+                                if (strpos($file, '.') !== 0) {
+                                    $subdirs = scandir($file);
+                                    $dirs[$i]['domain'] = $file;
+                                    $dirs[$i]['root'] = $file;
+                                    foreach ($subdirs as $subdir) {
+                                        if ($subdir == ".git" and file_exists($subdir.'/HEAD')) {
+                                            $file = file_get_contents($subdir.'/HEAD');
+                                            $branch = str_replace('ref: refs/heads/', '', $file);
+                                            $dirs[$i]['git'] = $branch;
+                                        }
+                                        if ($subdir == "www_root" or $subdir == "public") {
+                                            $dirs[$i]['root'] = $file . "/" . $subdir;
+                                            break;
+                                        }
+                                    }
+                                    $i++;
                                 }
                             }
-                            $i++;
                         }
-                    }
-                }
-                $in_column = ceil(count($dirs) / 3);
-                $i=0;
-                foreach ($dirs as $dir) {
-                    if ($i == 0 or $i == $in_column or $i == $in_column*2) {
-                        echo '<div class="col-sm-4"><div class="list-group">';
-                    }
-                    echo '<a href="'.$dir['root'].'" class="list-group-item"><span class="glyphicon glyphicon-folder-open"></span>&nbsp; &nbsp;'.$dir['domain'].'</a>';
-                    if ($i == $in_column-1 or $i == ($in_column*2)-1) {
-                        echo '</div></div>';
-                    }
-                    $i++;
-                }
-                if (!empty($dirs)) {
-                    echo '</div></div>';
-                }
-                closedir($handle);
-                ?>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="page-header">
-                        <h2>Server Configuration</h2>
+                        foreach ($dirs as $dir) { ?>
+                            <a href="<?php echo $dir['root']; ?>" class="list-group-item list-group-item-action flex-column align-items-start">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">
+                                        <i class="fa fa-folder-open" aria-hidden="true"></i>
+                                        <?php echo $dir['domain']; ?>
+                                    </h5>
+                                    <small><?php echo @$dir['git']; ?></small>
+                                </div>
+                            </a>
+                        <?php }
+                        closedir($handle);
+                        ?>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-3">
+                <div class="col-6">
+                    <h2>Server Configuration</h2>
                     <ul class="list-group">
-                        <li class="list-group-item">
-                            <h4 class="list-group-item-heading">Apache Version</h4>
-                            <p class="list-group-item-text">
+                        <li class="list-group-item list-group-item-action align-items-start">
+                            <h5 class="mb-1">Apache version</h5>
+                            <p class="mb-1">
                                 <?php
                                 $apacheVersion = apache_get_version();
                                 $array = explode(" ", $apacheVersion);
@@ -113,13 +94,15 @@ if (isset($_GET['phpinfo'])) {
                                 ?>
                             </p>
                         </li>
-                        <li class="list-group-item">
-                            <h4 class="list-group-item-heading">PHP Version</h4>
-                            <p class="list-group-item-text"><?php echo $phpVersion = phpversion(); ?></p>
+                        <li class="list-group-item list-group-item-action align-items-start">
+                            <h5 class="mb-1">PHP version</h5>
+                            <p class="mb-1">
+                                <?php echo $phpVersion = phpversion(); ?>
+                            </p>
                         </li>
-                        <li class="list-group-item">
-                            <h4 class="list-group-item-heading">MySQL Version</h4>
-                            <p class="list-group-item-text">
+                        <li class="list-group-item list-group-item-action align-items-start">
+                            <h5 class="mb-1">SQL version</h5>
+                            <p class="mb-1">
                                 <?php
                                 $mysqlVersion = mysqli_get_client_info();
                                 $array = explode(" ", $mysqlVersion);
@@ -129,77 +112,35 @@ if (isset($_GET['phpinfo'])) {
                             </p>
                         </li>
                     </ul>
-                </div>
-                <div class="col-sm-3">
-                    <div class="panel panel-info">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">PHP configuration</h3>
-                        </div>
-                        <div class="panel-body">
-                            <ul class="list-group">
-                                <li class="list-group-item">
-                                    <p class="list-group-item-text">
-                                        allow_url_fopen - <?php echo ini_get('allow_url_fopen'); ?>
-                                    </p>
-                                </li>
-                                <li class="list-group-item">
-                                    <p class="list-group-item-text">
-                                        allow_url_include - <?php echo ini_get('allow_url_include'); ?>
-                                    </p>
-                                </li>
-                                <li class="list-group-item">
-                                    <p class="list-group-item-text">
-                                        max_execution_time - <?php echo ini_get('max_execution_time'); ?>
-                                    </p>
-                                </li>
-                                <li class="list-group-item">
-                                    <p class="list-group-item-text">
-                                        max_file_uploads - <?php echo ini_get('max_file_uploads'); ?>
-                                    </p>
-                                </li>
-                                <li class="list-group-item">
-                                    <p class="list-group-item-text">
-                                        post_max_size - <?php echo ini_get('post_max_size'); ?>
-                                    </p>
-                                </li>
-                                <li class="list-group-item">
-                                    <p class="list-group-item-text">
-                                        upload_max_filesize - <?php echo ini_get('upload_max_filesize'); ?>
-                                    </p>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="panel panel-info">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Loaded PHP Extensions</h3>
-                        </div>
-                        <div class="panel-body">
-                            <?php
-                                $loaded_extensions = get_loaded_extensions();
-                                natcasesort($loaded_extensions);
-                                echo implode(', ', $loaded_extensions);
-                            ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="panel panel-info">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Loaded Apache Modules</h3>
-                        </div>
-                        <div class="panel-body">
-                            <?php
-                            $loaded_extensions = apache_get_modules();
-                            natcasesort($loaded_extensions);
-                            echo implode(', ', $loaded_extensions);
-                            ?>
-                        </div>
-                    </div>
+                    <hr>
+                    <h3>PHP configuration</h3>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            allow_url_fopen - <?php echo ini_get('allow_url_fopen'); ?>
+                        </li>
+                        <li class="list-group-item">
+                            allow_url_include - <?php echo ini_get('allow_url_include'); ?>
+                        </li>
+                        <li class="list-group-item">
+                            max_execution_time - <?php echo ini_get('max_execution_time'); ?>
+                        </li>
+                        <li class="list-group-item">
+                            max_file_uploads - <?php echo ini_get('max_file_uploads'); ?>
+                        </li>
+                        <li class="list-group-item">
+                            post_max_size - <?php echo ini_get('post_max_size'); ?>
+                        </li>
+                        <li class="list-group-item">
+                            upload_max_filesize - <?php echo ini_get('upload_max_filesize'); ?>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
+
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+
     </body>
 </html>
