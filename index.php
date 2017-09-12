@@ -52,8 +52,8 @@ $config = @include_once 'config-localhost.php';
                             $dirs[$i]['root'] = $file;
                             foreach ($subdirs as $subdir) {
                                 if ($subdir == ".git" and file_exists($file.'/'.$subdir.'/HEAD')) {
-                                    $file = file_get_contents($file.'/'.$subdir.'/HEAD');
-                                    $branch = str_replace('ref: refs/heads/', '', $file);
+                                    $fileData = file_get_contents($file.'/'.$subdir.'/HEAD');
+                                    $branch = str_replace('ref: refs/heads/', '', $fileData);
                                     $dirs[$i]['git'] = $branch;
                                 }
                                 if ($subdir == "www_root" or $subdir == "public") {
@@ -68,10 +68,10 @@ $config = @include_once 'config-localhost.php';
                 foreach ($dirs as $dir) { ?>
                     <a href="<?php echo $dir['root']; ?>" class="list-group-item list-group-item-action flex-column align-items-start">
                         <div class="d-flex w-100 justify-content-between">
-                                    <span>
-                                        <i class="fa fa-folder-open" aria-hidden="true"></i>
-                                        <?php echo $dir['domain']; ?>
-                                    </span>
+                            <span>
+                                <i class="fa fa-folder-open" aria-hidden="true"></i>
+                                <?php echo $dir['domain']; ?>
+                            </span>
                             <small><?php echo @$dir['git']; ?></small>
                         </div>
                     </a>
