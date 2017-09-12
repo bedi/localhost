@@ -1,0 +1,17 @@
+{
+  "name": "localhost",
+  "version": "1.0.0",
+  "description": "localhost =========",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bedi/localhost.git"
+  },
+  "author": "Petr Malecha",
+  "bugs": {
+    "url": "https://github.com/bedi/localhost/issues"
+  },
+  "homepage": "https://github.com/bedi/localhost#readme",
+  "dependencies": {
+    "bootstrap": "^4.0.0-beta"
+  }
+}
