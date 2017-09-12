@@ -3,7 +3,7 @@ if (isset($_GET['phpinfo'])) {
     phpinfo();
     exit();
 }
-$config = @include_once 'config.php';
+$config = @include_once 'config-localhost.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -68,10 +68,10 @@ $config = @include_once 'config.php';
                         foreach ($dirs as $dir) { ?>
                             <a href="<?php echo $dir['root']; ?>" class="list-group-item list-group-item-action flex-column align-items-start">
                                 <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">
+                                    <span>
                                         <i class="fa fa-folder-open" aria-hidden="true"></i>
                                         <?php echo $dir['domain']; ?>
-                                    </h5>
+                                    </span>
                                     <small><?php echo @$dir['git']; ?></small>
                                 </div>
                             </a>
